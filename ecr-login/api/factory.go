@@ -47,7 +47,9 @@ var userAgentHandler = request.NamedHandler{
 
 // NewClientWithDefaults creates the client and defaults region
 func (defaultClientFactory DefaultClientFactory) NewClientWithDefaults() Client {
-	awsSession := session.New()
+	awsSession := session.Must(session.NewSessionWithOptions(session.Options{
+		SharedConfigState: session.SharedConfigEnable,
+	}))
 	awsSession.Handlers.Build.PushBackNamed(userAgentHandler)
 	awsConfig := awsSession.Config
 	return defaultClientFactory.NewClientWithOptions(Options{
@@ -58,7 +60,9 @@ func (defaultClientFactory DefaultClientFactory) NewClientWithDefaults() Client 
 
 // NewClientFromRegion uses the region to create the client
 func (defaultClientFactory DefaultClientFactory) NewClientFromRegion(region string) Client {
-	awsSession := session.New()
+	awsSession := session.Must(session.NewSessionWithOptions(session.Options{
+		SharedConfigState: session.SharedConfigEnable,
+	}))
 	awsSession.Handlers.Build.PushBackNamed(userAgentHandler)
 	awsConfig := &aws.Config{Region: aws.String(region)}
 	return defaultClientFactory.NewClientWithOptions(Options{
